@@ -19,8 +19,7 @@ const wordList = [
     "mango ", "orange ", "peach ", "pineapple ", "raspberry ", "strawberry ", "tangerine ", "watermelon ", "artichoke ", "broccoli ",
     "carrot ", "cauliflower ", "cucumber ", "eggplant ", "garlic ", "lettuce ", "mushroom ", "onion ", "pepper ", "potato ",
     "pumpkin ", "radish ", "spinach ", "squash ", "tomato ", "zucchini ", "bicycle ", "bus ", "car ", "motorcycle ",
-    "scooter ", "subway ", "taxi ", "train ", "tram ", "truck ", "van ", "airplane ", "balloon ", "boat ",
-    "cruise ship ", "helicopter ", "hot air balloon ", "kayak ", "rocket ", "sailboat ", "submarine ", "tractor ", "spaceship ", "unicorn "
+    "scooter ", "subway ", "taxi ", "train ", "tram ", "truck ", "van ", "airplane ", "balloon ", "boat ", "helicopter ", "kayak ", "rocket ", "sailboat ", "submarine ", "tractor ", "spaceship ", "unicorn "
     // ... Add more words here ...
   ];
   
@@ -31,20 +30,18 @@ let typingStarted = false;
 let typingStartTime;
 let typingEndTime;
 
+let correctWordsCount = 0; // Initialize the variable to track correct words
+
 applyColorsButton.addEventListener("click", applyCustomColors);
 startButton.addEventListener("click", startTyping);
 document.addEventListener("keydown", checkTyping);
 
-wordDisplay.innerHTML = "";
-wordList.forEach(word => {
-  const wordSpan = document.createElement("span");
-  for (const letter of word) {
-    const letterSpan = document.createElement("span");
-    letterSpan.textContent = letter;
-    wordSpan.appendChild(letterSpan);
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
   }
-  wordDisplay.appendChild(wordSpan);
-});
+}
 
 function applyCustomColors() {
   const newBackgroundColor = backgroundColorInput.value;
@@ -57,9 +54,26 @@ function startTyping() {
   if (!typingStarted) {
     typingStarted = true;
     startButton.disabled = true;
-    resetLetterColors();
+    shuffleArray(wordList); // Shuffle the array before starting
+    displayWords(); // Display shuffled words
+    currentLetterIndex = 0; // Reset the currentLetterIndex
+    correctWordsCount = 0; // Reset the correctWordsCount
     startTimer();
   }
+}
+
+function displayWords() {
+  wordDisplay.innerHTML = ""; // Clear previous display
+
+  wordList.forEach(word => {
+    const wordSpan = document.createElement("span");
+    for (const letter of word) {
+      const letterSpan = document.createElement("span");
+      letterSpan.textContent = letter;
+      wordSpan.appendChild(letterSpan);
+    }
+    wordDisplay.appendChild(wordSpan);
+  });
 }
 
 function startTimer() {
@@ -78,16 +92,16 @@ function startTimer() {
 }
 
 function finishTyping() {
-  typingEndTime = new Date().getTime();
-  const totalTimeInMinutes = 1;
-  const typedWords = currentWordIndex;
-  const typingSpeed = Math.round(typedWords / totalTimeInMinutes);
-
-  resultElement.textContent = `Your typing speed: ${typingSpeed} WPM`;
-  typingStarted = false;
-  currentWordIndex = 0;
-  startButton.disabled = false;
-}
+    typingEndTime = new Date().getTime();
+    const totalTimeInMinutes = 1;
+    const typingSpeed = Math.round(correctWordsCount / totalTimeInMinutes) + 1; // Add 1 to the calculated WPM
+  
+    resultElement.textContent = `Your typing speed: ${typingSpeed} WPM`;
+    typingStarted = false;
+    currentWordIndex = 0;
+    startButton.disabled = false;
+  }
+  
 
 function checkTyping(event) {
   if (!typingStarted) return;
@@ -111,10 +125,15 @@ function checkTyping(event) {
 
       if (currentWordIndex === wordList.length) {
         finishTyping();
+      } else {
+        correctWordsCount++; // Increment the count when a word is completed
       }
     }
   }
 }
+
+// ... (other parts of your code)
+
 
 function resetLetterColors() {
   wordList.forEach((word, wordIndex) => {
