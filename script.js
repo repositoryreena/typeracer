@@ -1,3 +1,6 @@
+const backgroundColorInput = document.getElementById("backgroundColor");
+const textColorInput = document.getElementById("textColor");
+const applyColorsButton = document.getElementById("applyColorsButton");
 const wordDisplay = document.getElementById("wordDisplay");
 const startButton = document.getElementById("startButton");
 const timerElement = document.getElementById("timer");
@@ -17,7 +20,7 @@ const wordList = [
     "carrot ", "cauliflower ", "cucumber ", "eggplant ", "garlic ", "lettuce ", "mushroom ", "onion ", "pepper ", "potato ",
     "pumpkin ", "radish ", "spinach ", "squash ", "tomato ", "zucchini ", "bicycle ", "bus ", "car ", "motorcycle ",
     "scooter ", "subway ", "taxi ", "train ", "tram ", "truck ", "van ", "airplane ", "balloon ", "boat ",
-    "cruise ship ", "helicopter ", "hot air balloon ", "kayak ", "rocket ", "sailboat ", "submarine ", "tractor ", "spaceship ", "unicorn"
+    "cruise ship ", "helicopter ", "hot air balloon ", "kayak ", "rocket ", "sailboat ", "submarine ", "tractor ", "spaceship ", "unicorn "
     // ... Add more words here ...
   ];
   
@@ -27,6 +30,10 @@ let currentLetterIndex = 0;
 let typingStarted = false;
 let typingStartTime;
 let typingEndTime;
+
+applyColorsButton.addEventListener("click", applyCustomColors);
+startButton.addEventListener("click", startTyping);
+document.addEventListener("keydown", checkTyping);
 
 wordDisplay.innerHTML = "";
 wordList.forEach(word => {
@@ -39,8 +46,12 @@ wordList.forEach(word => {
   wordDisplay.appendChild(wordSpan);
 });
 
-startButton.addEventListener("click", startTyping);
-document.addEventListener("keydown", checkTyping);
+function applyCustomColors() {
+  const newBackgroundColor = backgroundColorInput.value;
+  const newTextColor = textColorInput.value;
+  document.body.style.backgroundColor = newBackgroundColor;
+  document.body.style.color = newTextColor;
+}
 
 function startTyping() {
   if (!typingStarted) {

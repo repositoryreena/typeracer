@@ -7,6 +7,10 @@
     margin-bottom: 20px;
   }
   
+  #customizationContainer {
+    margin-bottom: 20px;
+  }
+  
   .word {
     font-size: 24px;
     display: inline-block;
