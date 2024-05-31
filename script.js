@@ -50,6 +50,8 @@ function applyCustomColors() {
   document.body.style.color = newTextColor;
 }
 
+
+
 function startTyping() {
   if (!typingStarted) {
     typingStarted = true;
@@ -103,34 +105,38 @@ function finishTyping() {
   }
   
 
-function checkTyping(event) {
-  if (!typingStarted) return;
-
-  const typedCharacter = event.key;
-  const currentWord = wordList[currentWordIndex];
-  const currentLetter = currentWord[currentLetterIndex];
-
-  if (typedCharacter === currentLetter) {
-    if (currentLetterIndex === 0) {
-      typingStartTime = new Date().getTime();
-    }
-
-    const currentWordSpan = wordDisplay.children[currentWordIndex];
-    currentWordSpan.children[currentLetterIndex].classList.add("correct-letter");
-    currentLetterIndex++;
-
-    if (currentLetterIndex === currentWord.length) {
-      currentWordIndex++;
-      currentLetterIndex = 0;
-
-      if (currentWordIndex === wordList.length) {
-        finishTyping();
-      } else {
-        correctWordsCount++; // Increment the count when a word is completed
+  function checkTyping(event) {
+    if (!typingStarted) return;
+  
+    const typedCharacter = event.key;
+    const currentWord = wordList[currentWordIndex];
+    const currentLetter = currentWord[currentLetterIndex];
+  
+    if (typedCharacter === currentLetter) {
+      if (currentLetterIndex === 0) {
+        typingStartTime = new Date().getTime();
+      }
+  
+      const currentWordSpan = wordDisplay.children[currentWordIndex];
+      const currentLetterSpan = currentWordSpan.children[currentLetterIndex];
+      currentLetterSpan.classList.add("correct-letter");
+      currentLetterSpan.style.color = getComputedStyle(document.body).getPropertyValue('--background-color');
+      currentLetterIndex++;
+  
+      if (currentLetterIndex === currentWord.length) {
+        currentWordIndex++;
+        currentLetterIndex = 0;
+  
+        if (currentWordIndex === wordList.length) {
+          finishTyping();
+        } else {
+          correctWordsCount++; // Increment the count when a word is completed
+        }
       }
     }
   }
-}
+  
+  
 
 // ... (other parts of your code)
 
